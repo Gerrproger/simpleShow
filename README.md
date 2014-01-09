@@ -12,6 +12,8 @@ Now available only version for [jQuery](http://jquery.com/), pure JavaScript ver
 #### Requires
 * jQuery 1.7+
 
+### [Live Demo](http://gerrproger.github.io/simpleShow/)
+
 
 ## Usage
 
