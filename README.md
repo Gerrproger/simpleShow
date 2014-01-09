@@ -3,7 +3,14 @@ simpleShow
 
 SimpleShow is a responsive cross-browser slideshow plug-in. It's benefits are simplicity, convenience and lightness.
 
-Now available only version for [jQuery](http://jquery.com/), pure JavaScript version in progress.
+Now available only version for [jQuery](http://jquery.com/), pure JavaScript version is in progress.
+
+#### Supports
+* IE 7+
+* All other popular browsers
+
+#### Requires
+* jQuery 1.7+
 
 
 ## Usage
@@ -23,7 +30,7 @@ Place the html code where needed:
    <div class="simpleShow-slides">
       <a href="#" class="simpleShow-slide"><img src="img/1.jpg" alt="" /></a>
       <a href="#" class="simpleShow-slide"><img src="img/2.jpg" alt="" /></a>
-	    <a href="#" class="simpleShow-slide"><img src="img/3.jpg" alt="" /></a>
+      <a href="#" class="simpleShow-slide"><img src="img/3.jpg" alt="" /></a>
    </div>
 </div>
 ```
@@ -38,7 +45,7 @@ $(function(){
 });
 ```
 
-**Note:** Feel free to you use chaining after calling simpleShow method
+**Note:** Feel free to use chaining after calling simpleShow method
 
 **Note:** SimpleShow can be initialised on any number of elements on a single page
 
@@ -68,7 +75,7 @@ $('#myslider').simpleShow({
 **Note:** Currently, only crossfade effect available
 
 
-### arrrows
+### arrows
 _Default:_ `true`
 
 Whether to show navigation arrows or not.
