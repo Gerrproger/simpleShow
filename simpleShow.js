@@ -1,6 +1,6 @@
 /**
  * simpleShow
- * v1.0
+ * v1.2
  * Evgenii Dulikov
  * http://datatables.net/license_gpl2
  * Copyright 2014 Evgenii Dulikov, all rights reserved.
