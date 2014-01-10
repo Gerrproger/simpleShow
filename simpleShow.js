@@ -9,30 +9,33 @@
 (function( $ ) {
   $.fn.simpleShow = function(options){
 	var set = $.extend({
-      speed: 300,
+      speed: 1000,
 	  interval: 4000,
       radios: true,
-	  arrows: true
+	  arrows: true,
+      effect: 'crossfade'
     }, options);
     return this.each(function(){
-        var self = $(this),		
+        var self = $(this),	
+        pref = '.simpleShow-',	
         now = 1,
         t = null,
 		radios = null,
-		slides = self.find('.simpleShow-slide'),
-		ln = slides.length;
+		slides = self.find(pref+'slide'),
+		ln = slides.length,
+        colls = 10;
         if(ln < 2) return;
 		if(set.arrows) 
-		  self.find('.simpleShow-controls').append('<a class="simpleShow-toLeft" href="#"></a>').append('<a class="simpleShow-toRight" href="#"></a>');
+		  self.find(pref+'controls').append('<a class="simpleShow-toLeft" href="#"></a>').append('<a class="simpleShow-toRight" href="#"></a>');
 		if(set.radios){
-		  self.find('.simpleShow-controls').append('<div class="simpleShow-radios"></div>');
+		  self.find(pref+'controls').append('<div class="simpleShow-radios"></div>');
           for(var i=0; i<ln; i++) 
-		     self.find('.simpleShow-radios').append('<a href="#" class="simpleShow-radio"></a>');
-          self.find('.simpleShow-radio:first').addClass('simpleShow-active'); 
-		  radios = self.find('.simpleShow-radio');
+		     self.find(pref+'radios').append('<a href="#" class="simpleShow-radio"></a>');
+          self.find(pref+'radio:first').addClass('simpleShow-active'); 
+		  radios = self.find(pref+'radio');
 		}
         function setInterv(){
-		   t = setInterval(function(){interv();}, set.interval);
+		   t = setInterval(function(){interv();}, set.interval+set.speed);
 		}		
         function interv(reverse, prev){
             var nowN, nowP; 
@@ -45,31 +48,70 @@
                 nowP = reverse ? (now+1==ln ? 0 : now+1) : now-1;
             } 
             if(prev != undefined) nowP = prev;
-            slides.eq(nowN).fadeIn(set.speed);
-            slides.eq(nowP).fadeOut(set.speed);
+            switch(set.effect){
+                case 'crossfade': {
+                    var s = Math.floor(set.speed / 2);
+                    slides.eq(nowN).fadeIn(s);
+                    slides.eq(nowP).fadeOut(s);
+                } break;
+                case 'fading': {
+                    var s = Math.floor(set.speed / 2);
+                    slides.eq(nowP).fadeOut(s, function(){
+                        slides.eq(nowN).fadeIn(s);
+                    }); 
+                } break;
+                case 'blocks': {
+                    var w = Math.floor(self.width() / colls),
+                    h = self.height(),
+                    ow = self.width(),
+                    el = slides.eq(nowP),
+                    s = Math.floor(set.speed / colls);
+                    for(var i=0; i<colls; i++){
+                        var block = $('<div>');
+                        block.width(w).height(h).
+                        css({'position':'absolute',
+                             'z-index': 100, 
+                             'top': 0, 
+                             'overflow': 'hidden', 
+                             'left': i*w+'px' }).
+                        html($(el).clone().css({'position':'absolute',
+                            'z-index': 100, 
+                            'top': 0,
+                            'width': ow,
+                            'height': h, 
+                            'left': -1*i*w+'px' })
+                        ).appendTo(self); 
+                        block.delay(s*0.4*i).animate({top:h}, s*1.6, function(){
+                                $(this).remove();
+                        });
+                    }
+                    slides.eq(nowN).css('display','block');
+                    slides.eq(nowP).css('display','none');   
+                } break;
+            }
             radios.eq(nowN).addClass('simpleShow-active');
             radios.eq(nowP).removeClass('simpleShow-active');
             now++;
         }
         setInterv();
-        self.find('.simpleShow-toLeft').click(function(e){
+        self.find(pref+'toLeft').click(function(e){
             e.preventDefault();
             clearInterval(t); 
             now = now>2 ? now-2 : (now==1 ? ln-1 : ln);
             interv(true);
             setInterv();
         });
-        self.find('.simpleShow-toRight').click(function(e){
+        self.find(pref+'toRight').click(function(e){
             e.preventDefault();
             clearInterval(t);
             interv();
             setInterv();
         });
-        self.find('.simpleShow-radio').click(function(e){
+        self.find(pref+'radio').click(function(e){
             e.preventDefault();
             if($(this).hasClass('simpleShow-active')) return;
             clearInterval(t);
-            var ind = self.find('.simpleShow-radio').index($(this)),
+            var ind = self.find(pref+'radio').index($(this)),
                 prev = now==1 ? 0 : now-1;
             now = ind;
             interv(false, prev);

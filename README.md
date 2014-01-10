@@ -54,6 +54,20 @@ $(function(){
 
 ## Options
 
+
+### effect
+_Default:_ `crossfade`
+
+Transition effects. Can be `blocks, fading, crossfade`
+```javascript
+$('#myslider').simpleShow({
+  effect: 'blocks'
+});
+```
+
+**Note:** For fading effect you can setup "fading throw" color by defining `background-color` to `.simpleShow-wrapper` class
+
+
 ### interval
 _Default:_ `4000`
 
@@ -66,15 +80,14 @@ $('#myslider').simpleShow({
 
 
 ### speed
-_Default:_ `300`
+_Default:_ `1000`
 
 Speed of sliding effects in milliseconds.
 ```javascript
 $('#myslider').simpleShow({
-	speed: 600
+	speed: 3000
 });
 ```
-**Note:** Currently, only crossfade effect available
 
 
 ### arrows
