@@ -13,7 +13,8 @@
 	  interval: 4000,
       radios: true,
 	  arrows: true,
-      effect: 'crossfade'
+      effect: 'crossfade',
+	  cols: 10
     }, options);
     return this.each(function(){
         var self = $(this),	
@@ -22,8 +23,7 @@
         t = null,
 		radios = null,
 		slides = self.find(pref+'slide'),
-		ln = slides.length,
-        colls = 10;
+		ln = slides.length;
         if(ln < 2) return;
 		if(set.arrows) 
 		  self.find(pref+'controls').append('<a class="simpleShow-toLeft" href="#"></a>').append('<a class="simpleShow-toRight" href="#"></a>');
@@ -61,12 +61,12 @@
                     }); 
                 } break;
                 case 'blocks': {
-                    var w = Math.floor(self.width() / colls),
+                    var w = Math.floor(self.width() / set.cols)+1,
                     h = self.height(),
                     ow = self.width(),
                     el = slides.eq(nowP),
-                    s = Math.floor(set.speed / colls);
-                    for(var i=0; i<colls; i++){
+                    s = Math.floor(set.speed / set.cols);
+                    for(var i=0; i<set.cols; i++){
                         var block = $('<div>');
                         block.width(w).height(h).
                         css({'position':'absolute',
@@ -74,14 +74,12 @@
                              'top': 0, 
                              'overflow': 'hidden', 
                              'left': i*w+'px' }).
-                        html($(el).clone().css({'position':'absolute',
-                            'z-index': 100, 
-                            'top': 0,
+                        html($(el).clone().css({'top': 0,
                             'width': ow,
                             'height': h, 
                             'left': -1*i*w+'px' })
                         ).appendTo(self); 
-                        block.delay(s*0.4*i).animate({top:h}, s*1.6, function(){
+                        block.delay(s*i).animate({top:h, opacity:0}, s*2, function(){
                                 $(this).remove();
                         });
                     }

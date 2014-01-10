@@ -42,7 +42,9 @@
 
 <script>
 $(function(){
- // $('.test').simpleShow({effect: 'fading'});
+  $('.test:first').simpleShow({effect: 'blocks', cols: 20});
+  $('.test').eq(1).simpleShow({effect: 'fading'});
+  $('.test:last').simpleShow({speed: 2000});
 });
 </script>
 </body>
