@@ -10,7 +10,7 @@ Now available only version for [jQuery](http://jquery.com/), pure JavaScript ver
 * All other popular browsers
 
 #### Requires
-* jQuery 1.7+
+* jQuery 1.4+
 
 ### [Live Demo](http://gerrproger.github.io/simpleShow/)
 
@@ -58,14 +58,14 @@ $(function(){
 ### effect
 _Default:_ `crossfade`
 
-Transition effects. Can be `blocks, fading, crossfade`
+Transition effects. Can be `blocks`, `fading`, `crossfade`
 ```javascript
 $('#myslider').simpleShow({
   effect: 'blocks'
 });
 ```
 
-**Note:** For fading effect you can setup "fading throw" color by defining `background-color` to `.simpleShow-wrapper` class
+**Note:** For `fading` effect you can setup "fading throw" color by defining `background-color` to `.simpleShow-wrapper` class
 
 
 ### interval
