@@ -62,7 +62,9 @@ The responsive cross-browser slideshow plug-in
 </footer>
 <script>
 $(function(){
-  $('.test').simpleShow();
+  $('.test:first').simpleShow({effect: 'blocks', cols: 20});
+  $('.test').eq(1).simpleShow({effect: 'fading'});
+  $('.test:last').simpleShow({speed: 2000});;
 });
 </script>
 </body>
