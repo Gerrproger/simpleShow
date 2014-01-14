@@ -84,10 +84,10 @@ $('#myslider').simpleShow({
 ### direction
 _Default:_ `bottom`
 
-Sets the direction for some effects.
+Sets the direction for some effects. can be `bottom`, `top`, `left` or `right`
 ```javascript
 $('#myslider').simpleShow({
-  blocks: 20
+  direction: 'left'
 });
 ```
 
