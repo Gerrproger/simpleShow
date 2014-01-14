@@ -58,7 +58,7 @@ $(function(){
 ### effect
 _Default:_ `crossfade`
 
-Transition effects. Can be `blocks`, `fading`, `crossfade`
+Transition effects. Can be `blocks`, `sliding`, `fading`, `crossfade`
 ```javascript
 $('#myslider').simpleShow({
   effect: 'blocks'
@@ -66,6 +66,32 @@ $('#myslider').simpleShow({
 ```
 
 **Note:** For `fading` effect you can setup "fading throw" color by defining `background-color` to `.simpleShow-wrapper` class
+
+
+### blocks
+_Default:_ `10`
+
+Amount of blocks which would be used for `blocks` animation.
+```javascript
+$('#myslider').simpleShow({
+  blocks: 20
+});
+```
+
+**Note:** Used only with `blocks` effect
+
+
+### direction
+_Default:_ `bottom`
+
+Sets the direction for some effects.
+```javascript
+$('#myslider').simpleShow({
+  blocks: 20
+});
+```
+
+**Note:** Used only with `blocks` anв `sliding` effects
 
 
 ### interval
