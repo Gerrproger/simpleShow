@@ -61,7 +61,7 @@ _Default:_ `crossfade`
 Transition effects. Can be `blocks`, `sliding`, `fading`, `crossfade`
 ```javascript
 $('#myslider').simpleShow({
-  effect: 'blocks'
+  effect: 'fading'
 });
 ```
 
@@ -74,6 +74,7 @@ _Default:_ `10`
 Amount of blocks which would be used for `blocks` animation.
 ```javascript
 $('#myslider').simpleShow({
+  effect: 'blocks',
   blocks: 20
 });
 ```
@@ -84,14 +85,15 @@ $('#myslider').simpleShow({
 ### direction
 _Default:_ `bottom`
 
-Sets the direction for some effects. can be `bottom`, `top`, `left` or `right`
+Sets the direction for some effects. Can be `bottom`, `top`, `left` or `right`.
 ```javascript
 $('#myslider').simpleShow({
-  direction: 'left'
+  effect: 'sliding',
+  direction: 'top'
 });
 ```
 
-**Note:** Used only with `blocks` anв `sliding` effects
+**Note:** Used only with `blocks` and `sliding` effects
 
 
 ### interval
