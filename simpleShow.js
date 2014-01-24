@@ -6,8 +6,9 @@
  * Copyright 2014 Evgenii Dulikov, all rights reserved.
  */
  
-(function( $ ) {
-  $.fn.simpleShow = function(options){
+(function($){
+var methods = {
+  init : function(options, elems){
 	var set = $.extend({
       speed: 1000,
 	  interval: 4000,
@@ -19,7 +20,14 @@
       normIndex: 10,
       maxIndex: 100
     }, options);
-    return this.each(function(){
+    jQuery.extend(jQuery.easing,{
+    swing: function (x, t, b, c, d){
+          if ((t/=d/2) < 1) return c/2*t*t + b;
+          return -c/2 * ((--t)*(t-2) - 1) + b;
+        }
+    });
+    if(!elems) var elems = this;
+    return elems.each(function(){
         var self = $(this),	
         pref = '.simpleShow-',
         act = 'simpleShow-active',	
@@ -29,7 +37,10 @@
 		slides = self.find(pref+'slide'),
 		ln = slides.length,
         dr = set.direction,
-        n = set.blocks;
+        n = set.blocks,
+        data = self.data('pref');
+        if(!data){
+            self.data({'pref':set, 'slides':slides});
         if(ln < 2) return;
 		if(set.arrows) 
 		  self.find(pref+'controls').append('<a class="simpleShow-toLeft" href="#"></a>').append('<a class="simpleShow-toRight" href="#"></a>');
@@ -41,8 +52,38 @@
 		  radios = self.find(pref+'radio');
 		}
         slides.css({'overflow':'hidden', 'z-index':set.normIndex});
+        self.find(pref+'toLeft').click(function(e){
+            e.preventDefault();
+            clearInterval(t); 
+            now = now>2 ? now-2 : (now==1 ? ln-1 : ln);
+            interv(true);
+            setInterv();
+        });
+        self.find(pref+'toRight').click(function(e){
+            e.preventDefault();
+            clearInterval(t);
+            interv();
+            setInterv();
+        });
+        self.find(pref+'radio').click(function(e){
+            e.preventDefault();
+            if($(this).hasClass(act)) return;
+            clearInterval(t);
+            var ind = self.find(pref+'radio').index($(this)),
+            prev = now==1 ? 0 : now-1,
+            now = ind;
+            interv(false, prev);
+            setInterv();
+        });
+        setInterv();
+        }
+        else {
+            methods.update(set, self);
+            return false;
+        }
         function setInterv(){
 		   t = setInterval(function(){interv();}, set.interval+set.speed);
+           self.data('timer', t);
 		}		
         function interv(reverse, prev){
             var nowN, nowP,
@@ -74,11 +115,12 @@
                 case 'sliding': {
                     var s = set.speed,
                     b = (dr=='left' || dr=='right') ? w : h,
-                    rb = b*0.1;
-                    lt = (dr=='left' || dr=='right') ? (dr=='left' ? ('+='+rb) : ('-='+rb)) : 'auto',
-                    ltt = (dr=='left' || dr=='right') ? (dr=='left' ? ('-='+(b+rb)) : ('+='+(b+rb))) : 'auto',
-                    tt = (dr=='top' || dr=='bottom') ? (dr=='top' ? ('+='+rb) : ('-='+rb)) : 'auto',
-                    ttt = (dr=='top' || dr=='bottom') ? (dr=='top' ? ('-='+(b+rb)) : ('+='+(b+rb))) : 'auto';
+                    rb = b*0.1,
+                    tm = (dr=='left' || dr=='right'),
+                    lt = tm ? (dr=='left' ? ('+='+rb) : ('-='+rb)) : 'auto',
+                    ltt = tm ? (dr=='left' ? ('-='+(b+rb)) : ('+='+(b+rb))) : 'auto',
+                    tt = !tm ? (dr=='top' ? ('+='+rb) : ('-='+rb)) : 'auto',
+                    ttt = !tm ? (dr=='top' ? ('-='+(b+rb)) : ('+='+(b+rb))) : 'auto';
                     elPrev.css({'z-index':set.maxIndex, 'height':h, 'width':w}).
                        animate({'left':lt, 'top':tt}, s*0.3).delay(s*0.1).
                        animate({'left':ltt, 'top':ttt}, s*0.6, function(){
@@ -121,31 +163,36 @@
             radios.eq(nowN).addClass(act);
             radios.eq(nowP).removeClass(act);
             now++;
-        }
-        setInterv();
-        self.find(pref+'toLeft').click(function(e){
-            e.preventDefault();
-            clearInterval(t); 
-            now = now>2 ? now-2 : (now==1 ? ln-1 : ln);
-            interv(true);
-            setInterv();
-        });
-        self.find(pref+'toRight').click(function(e){
-            e.preventDefault();
-            clearInterval(t);
-            interv();
-            setInterv();
-        });
-        self.find(pref+'radio').click(function(e){
-            e.preventDefault();
-            if($(this).hasClass(act)) return;
-            clearInterval(t);
-            var ind = self.find(pref+'radio').index($(this)),
-            prev = now==1 ? 0 : now-1,
-            now = ind;
-            interv(false, prev);
-            setInterv();
-        });	
-	});	
-  };
+        }       	
+	});
+  },
+  destroy: function(el){
+    if(!el) var el = this;
+    return el.each(function(){
+        var self = $(this),
+        pref = '.simpleShow-',
+        data = self.data();
+        if(!data.pref) return;
+        self.find(pref+'controls '+pref+'toLeft, '+pref+'controls '+pref+'toRight, '+pref+'controls '+pref+'radios').remove();
+        data.slides.css({'display':'block', 'z-index':data.pref.normIndex});
+        clearInterval(data.timer);
+        self.removeData();
+    });
+  },
+  update: function(set, self){
+    if(!self) var self = this;
+    //var m = new Array();
+    methods.destroy(self);
+    methods.init(set, self);
+  }
+};
+$.fn.simpleShow = function(method){
+    if ( methods[method] ) {
+      return methods[method].apply( this, Array.prototype.slice.call( arguments, 1 ));
+    } else if ( typeof method === 'object' || ! method ) {
+      return methods.init.apply( this, arguments );
+    } else {
+      $.error('There is no such a method');
+    }    
+};
 })(jQuery);
