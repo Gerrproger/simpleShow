@@ -52,6 +52,40 @@ $(function(){
 **Note:** SimpleShow can be initialised on any number of elements on a single page
 
 
+
+## Methods
+
+
+### init
+Initializes plugin. Can receive option(s). Use shortcutted syntax
+```javascript
+$('#myslider').simpleShow({
+  effect: 'fading'
+});
+$('#my2slider').simpleShow();
+```
+
+
+### update
+Reinitializes plugin. Can be used for dynamically changing content and changing options
+```javascript
+$('#myslider').simpleShow('update');
+$('#my2slider').simpleShow('update', {speed: 2000});
+```
+Or you can use shortcutted syntax for already initialized elements
+```javascript
+$('#myslider').simpleShow({speed: 2000, effect: 'sliding'});
+$('#myslider').simpleShow({speed: 1000});
+```
+
+
+### destroy
+Destroys plugin and returns the element in original condition
+```javascript
+$('#myslider').simpleShow('destroy');
+```
+
+
 ## Options
 
 
