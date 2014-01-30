@@ -1,9 +1,10 @@
-/**
- * simpleShow
- * v1.2
- * Evgenii Dulikov
+/*!
+ * simpleShow - the responsive cross-browser slideshow plug-in
+ * @version  v1.4
+ * @author   Evgenii Dulikov
  * http://datatables.net/license_gpl2
- * Copyright 2014 Evgenii Dulikov, all rights reserved.
+ * Copyright 2014 Evgenii Dulikov <gerrproger@gmail.com>
+ * https://github.com/Gerrproger/simpleShow
  */
  
 (function($){
@@ -34,7 +35,7 @@ var methods = {
         now = 1,
         t = null,
 		radios = null,
-		slides = self.find(pref+'slide'),
+		slides = self.find(pref+'slides ' + pref+'slide'),
 		ln = slides.length,
         dr = set.direction,
         n = set.blocks,
@@ -78,8 +79,8 @@ var methods = {
         setInterv();
         }
         else {
+            set = $.extend(self.data('pref') ,options);
             methods.update(set, self);
-            return false;
         }
         function setInterv(){
 		   t = setInterval(function(){interv();}, set.interval+set.speed);
@@ -181,9 +182,10 @@ var methods = {
   },
   update: function(set, self){
     if(!self) var self = this;
-    //var m = new Array();
-    methods.destroy(self);
-    methods.init(set, self);
+    self.each(function(){
+        methods.destroy($(this));
+        methods.init(set, $(this));
+    });
   }
 };
 $.fn.simpleShow = function(method){
