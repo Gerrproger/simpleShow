@@ -1,6 +1,6 @@
 /*!
  * simpleShow - the responsive cross-browser slideshow plug-in
- * @version  v1.4
+ * @version  v1.5
  * @author   Evgenii Dulikov
  * http://datatables.net/license_gpl2
  * Copyright 2014 Evgenii Dulikov <gerrproger@gmail.com>
@@ -31,24 +31,26 @@ var methods = {
     return elems.each(function(){
         var self = $(this),	
         pref = '.simpleShow-',
-        act = 'simpleShow-active',	
+		cls = ' class="simpleShow-',
+        act = 'simpleShow-active',
+        hr = ' href="#">',		
         now = 1,
         t = null,
 		radios = null,
-		slides = self.find(pref+'slides ' + pref+'slide'),
+		slides = self.find(pref+'slides ' +pref+ 'slide'),
 		ln = slides.length,
         dr = set.direction,
         n = set.blocks,
         data = self.data('pref');
         if(!data){
-            self.data({'pref':set, 'slides':slides});
+            self.data({'pref':set, 'slides':slides, 'active': 1});
         if(ln < 2) return;
 		if(set.arrows) 
-		  self.find(pref+'controls').append('<a class="simpleShow-toLeft" href="#"></a>').append('<a class="simpleShow-toRight" href="#"></a>');
+		  self.find(pref+'controls').append('<a' +cls+ 'toLeft"' +hr).append('<a' +cls+ 'toRight"' +hr);
 		if(set.radios){
-		  self.find(pref+'controls').append('<div class="simpleShow-radios"></div>');
+		  self.find(pref+'controls').append('<div' +cls+ 'radios">');
           for(var i=0; i<ln; i++) 
-		     self.find(pref+'radios').append('<a href="#" class="simpleShow-radio"></a>');
+		     self.find(pref+'radios').append('<a' +cls+ 'radio"' +hr);
           self.find(pref+'radio:first').addClass(act); 
 		  radios = self.find(pref+'radio');
 		}
@@ -78,10 +80,7 @@ var methods = {
         });
         setInterv();
         }
-        else {
-            set = $.extend(self.data('pref') ,options);
-            methods.update(set, self);
-        }
+        else methods.update(options, self);
         function setInterv(){
 		   t = setInterval(function(){interv();}, set.interval+set.speed);
            self.data('timer', t);
@@ -97,7 +96,7 @@ var methods = {
             else {
                 nowN = now;
                 nowP = reverse ? (now+1==ln ? 0 : now+1) : now-1;
-            } 
+            } self.data('active', now+1);
             if(prev != undefined) nowP = prev;
             var elNnew = slides.eq(nowN),
             elPrev = slides.eq(nowP);
@@ -125,9 +124,9 @@ var methods = {
                     elPrev.css({'z-index':set.maxIndex, 'height':h, 'width':w}).
                        animate({'left':lt, 'top':tt}, s*0.3).delay(s*0.1).
                        animate({'left':ltt, 'top':ttt}, s*0.6, function(){
-                        $(this).css({'display':'none', 'z-index':set.normIndex, 'left':0, 'top':0, 'height':'auto', 'width':'auto'});
+                        $(this).css({'z-index':set.normIndex, 'left':0, 'top':0, 'height':'auto', 'width':'auto'}).hide();
                        });
-                    elNnew.css('display','block');
+                    elNnew.show();
                 } break;
                 case 'blocks': {
                     var ow = Math.floor(w / n)+1,
@@ -157,8 +156,8 @@ var methods = {
                                 $(this).remove();
                         });
                     }
-                    elNnew.css('display','block');
-                    elPrev.css('display','none');   
+                    elNnew.show();
+                    elPrev.hide();   
                 }
             }
             radios.eq(nowN).addClass(act);
@@ -175,26 +174,31 @@ var methods = {
         data = self.data();
         if(!data.pref) return;
         self.find(pref+'controls '+pref+'toLeft, '+pref+'controls '+pref+'toRight, '+pref+'controls '+pref+'radios').remove();
-        data.slides.css({'display':'block', 'z-index':data.pref.normIndex});
+        data.slides.css({'z-index':data.pref.normIndex}).show();
         clearInterval(data.timer);
         self.removeData();
     });
   },
-  update: function(set, self){
+  update: function(options, self){
     if(!self) var self = this;
-    self.each(function(){
-        methods.destroy($(this));
-        methods.init(set, $(this));
+    return self.each(function(){
+	    var el = $(this),
+	    set = $.extend(el.data('pref'), options);
+        methods.destroy(el);
+        methods.init(set, el);
     });
+  },
+  params: function(){
+    var m = [];
+    $(this).each(function(){
+	    var el = $(this);
+	    m.push({'item':el, 'settings':el.data('pref'), 'slides':el.data('slides'), 'active':el.data('active')});	
+	});
+	return m;
   }
 };
 $.fn.simpleShow = function(method){
-    if ( methods[method] ) {
-      return methods[method].apply( this, Array.prototype.slice.call( arguments, 1 ));
-    } else if ( typeof method === 'object' || ! method ) {
-      return methods.init.apply( this, arguments );
-    } else {
-      $.error('There is no such a method');
-    }    
+    if(methods[method]) return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
+	else if (typeof method==='object' || !method) return methods.init.apply( this, arguments );
 };
 })(jQuery);
