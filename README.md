@@ -87,18 +87,22 @@ $('#myslider').simpleShow('destroy');
 
 
 ### params
-Returns parameters object for selected slider which consists of 
-`item` - jQuery object of slider
+Returns object with parameters for selected slider which consists of:
 
-`settings` - object with settings
+`item` - jQuery slider object
+
+`settings` - settings object
 
 `slides` - jQuery collection of slides
 
-`active` - index of active slise
+`active` - index number of an active slide
 
 ```javascript
 var params = $('#myslider').simpleShow('params');
 ```
+
+**Note:** This method is only one returning data, not elements
+
 
 
 ## Options
@@ -192,7 +196,7 @@ $('#myslider').simpleShow({
 ### normIndex
 _Default:_ `10`
 
-Z-index property for slides.
+Z-index css property for slides.
 ```javascript
 $('#myslider').simpleShow({
 	normIndex: 50
@@ -201,9 +205,9 @@ $('#myslider').simpleShow({
 
 
 ### maxIndex
-_Default:_ `10`
+_Default:_ `100`
 
-Z-index which would be set for active slide during some effects.
+Z-index property which would be set for active slide during some effects.
 ```javascript
 $('#myslider').simpleShow({
 	maxIndex: 70
