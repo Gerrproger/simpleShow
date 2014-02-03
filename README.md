@@ -86,6 +86,21 @@ $('#myslider').simpleShow('destroy');
 ```
 
 
+### params
+Returns parameters object for selected slider which consists of 
+`item` - jQuery object of slider
+
+`settings` - object with settings
+
+`slides` - jQuery collection of slides
+
+`active` - index of active slise
+
+```javascript
+var params = $('#myslider').simpleShow('params');
+```
+
+
 ## Options
 
 
@@ -170,5 +185,27 @@ Whether to show navigation radios or not.
 ```javascript
 $('#myslider').simpleShow({
 	radios: false
+});
+```
+
+
+### normIndex
+_Default:_ `10`
+
+Z-index property for slides.
+```javascript
+$('#myslider').simpleShow({
+	normIndex: 50
+});
+```
+
+
+### maxIndex
+_Default:_ `10`
+
+Z-index which would be set for active slide during some effects.
+```javascript
+$('#myslider').simpleShow({
+	maxIndex: 70
 });
 ```
