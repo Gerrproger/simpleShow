@@ -160,9 +160,11 @@ var methods = {
                     elPrev.hide();   
                 }
             }
+			if(radios){
             radios.eq(nowN).addClass(act);
             radios.eq(nowP).removeClass(act);
-            now++;
+            }
+			now++;
         }       	
 	});
   },
