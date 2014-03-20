@@ -164,11 +164,13 @@ var methods = {
                     elPrev.hide();   
                 }
             }
-            radios.eq(nowN).addClass(act);
-            radios.eq(nowP).removeClass(act);
+			if(radios){
+               radios.eq(nowN).addClass(act);
+               radios.eq(nowP).removeClass(act);
+            }       	
             now++;
             self.data('active', now);
-        }       	
+        }
 	});
   },
   destroy: function(el){
