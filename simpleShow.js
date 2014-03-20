@@ -1,6 +1,6 @@
 /*!
  * simpleShow - the responsive cross-browser slideshow plug-in
- * @version  v1.5
+ * @version  v1.6
  * @author   Evgenii Dulikov
  * http://datatables.net/license_gpl2
  * Copyright 2014 Evgenii Dulikov <gerrproger@gmail.com>
@@ -45,39 +45,39 @@ var methods = {
         if(!data){
             self.data({'pref':set, 'slides':slides, 'active': 1});
         if(ln < 2) return;
-		if(set.arrows) 
+		if(set.arrows){
 		  self.find(pref+'controls').append('<a' +cls+ 'toLeft"' +hr).append('<a' +cls+ 'toRight"' +hr);
+		  self.find(pref+'toLeft').click(function(e){
+            e.preventDefault();
+            clearInterval(t);
+            now = now>2 ? now-2 : (now==1 ? ln-1 : ln);
+            interv(true);
+            setInterv();
+          });
+          self.find(pref+'toRight').click(function(e){
+            e.preventDefault();
+            clearInterval(t);
+            interv();
+            setInterv();
+          });
+		}
 		if(set.radios){
 		  self.find(pref+'controls').append('<div' +cls+ 'radios">');
           for(var i=0; i<ln; i++) 
 		     self.find(pref+'radios').append('<a' +cls+ 'radio"' +hr);
           self.find(pref+'radio:first').addClass(act); 
 		  radios = self.find(pref+'radio');
-		}
-        slides.css({'overflow':'hidden', 'z-index':set.normIndex});
-        self.find(pref+'toLeft').click(function(e){
-            e.preventDefault();
-            clearInterval(t); 
-            now = now>2 ? now-2 : (now==1 ? ln-1 : ln);
-            interv(true);
-            setInterv();
-        });
-        self.find(pref+'toRight').click(function(e){
-            e.preventDefault();
-            clearInterval(t);
-            interv();
-            setInterv();
-        });
-        self.find(pref+'radio').click(function(e){
+		  radios.click(function(e){
             e.preventDefault();
             if($(this).hasClass(act)) return;
             clearInterval(t);
-            var ind = self.find(pref+'radio').index($(this)),
-            prev = now==1 ? 0 : now-1,
+            var ind = radios.index($(this)),
             now = ind;
-            interv(false, prev);
+            interv(false, now);
             setInterv();
-        });
+          });
+		}
+        slides.css({'overflow':'hidden', 'z-index':set.normIndex});
         setInterv();
         }
         else methods.update(options, self);
@@ -85,10 +85,14 @@ var methods = {
 		   t = setInterval(function(){interv();}, set.interval+set.speed);
            self.data('timer', t);
 		}		
-        function interv(reverse, prev){
+        function interv(reverse, nowq){
             var nowN, nowP,
             w = self.width(),
             h = self.height(); 
+            if(nowq != undefined){ console.log
+                nowP = now-1;
+                now = nowN = nowq;
+            } else {
             if(now == ln){
                 now = nowN = 0;
                 nowP = reverse ? 1 : ln-1;
@@ -96,8 +100,8 @@ var methods = {
             else {
                 nowN = now;
                 nowP = reverse ? (now+1==ln ? 0 : now+1) : now-1;
-            } self.data('active', now+1);
-            if(prev != undefined) nowP = prev;
+            }
+            }
             var elNnew = slides.eq(nowN),
             elPrev = slides.eq(nowP);
             switch(set.effect){
@@ -163,6 +167,7 @@ var methods = {
             radios.eq(nowN).addClass(act);
             radios.eq(nowP).removeClass(act);
             now++;
+            self.data('active', now);
         }       	
 	});
   },
@@ -172,7 +177,7 @@ var methods = {
         var self = $(this),
         pref = '.simpleShow-',
         data = self.data();
-        if(!data.pref) return;
+        if(!data.pref) return console.error(methods.lang._shE + methods.lang._notIn, this);
         self.find(pref+'controls '+pref+'toLeft, '+pref+'controls '+pref+'toRight, '+pref+'controls '+pref+'radios').remove();
         data.slides.css({'z-index':data.pref.normIndex}).show();
         clearInterval(data.timer);
@@ -183,7 +188,9 @@ var methods = {
     if(!self) var self = this;
     return self.each(function(){
 	    var el = $(this),
-	    set = $.extend(el.data('pref'), options);
+        pref = el.data('pref');
+        if(!pref) return console.error(methods.lang._shE + methods.lang._notIn, this);
+	    var set = $.extend(pref, options);
         methods.destroy(el);
         methods.init(set, el);
     });
@@ -191,14 +198,24 @@ var methods = {
   params: function(){
     var m = [];
     $(this).each(function(){
-	    var el = $(this);
-	    m.push({'item':el, 'settings':el.data('pref'), 'slides':el.data('slides'), 'active':el.data('active')});	
+	    var el = $(this),
+        pref = el.data('pref');
+        if(!pref) return console.error(methods.lang._shE + methods.lang._notIn, this);
+	    m.push({'item':el, 'settings':pref, 'slides':el.data('slides'), 'active':el.data('active')});	
 	});
 	return m;
+  },
+  lang: {
+    _shE: 'simpleShow Error! ',
+    _notIn: 'Not initialized element:',
+    _notMt: 'Wrong method name:'
   }
 };
 $.fn.simpleShow = function(method){
-    if(methods[method]) return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
-	else if (typeof method==='object' || !method) return methods.init.apply( this, arguments );
+    if(methods[method] && typeof methods[method]==='function') return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
+	else{
+        if (typeof method==='object' || !method) return methods.init.apply( this, arguments );
+        else return console.error(methods.lang._shE + methods.lang._notMt, method);
+    }
 };
 })(jQuery);
