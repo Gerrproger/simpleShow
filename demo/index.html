@@ -60,13 +60,25 @@
    </div>
 </div>
 
+<div class="simpleShow-wrapper test">
+   <div class="simpleShow-controls"></div>
+   <img class="simpleShow-zeroBg" src="../zerobg.png" />
+   <div class="simpleShow-slides">
+      <a href="#" class="simpleShow-slide"><img src="img/1.jpg" alt="" /></a>
+      <a href="#" class="simpleShow-slide"><img src="img/2.jpg" alt="" /></a>
+    <a href="#" class="simpleShow-slide"><img src="img/3.jpg" alt="" /></a>
+   </div>
+</div>
+
 <script>
 $(function(){
-  $('.test:first').simpleShow({effect: 'blocks', blocks: 20, speed: 2000, direction:'top', interval:400});
+  $('.test:first').simpleShow({effect: 'blocks', blocks: 20, speed: 2000, direction:'top', interval:400, opacity: 0.2});
   $('.test').eq(1).simpleShow({effect: 'fading'});
   $('.test').eq(2).simpleShow({speed: 2000});
-  $('.test').eq(3).simpleShow({effect: 'blocks', speed: 4000, direction: 'left'});
-  $('.test:last').simpleShow({effect:'sliding', direction:'top', interval:1000});
+  $('.test').eq(3).simpleShow({effect: 'blocks', speed: 4000, direction: 'left', opacity: 0});
+  $('.test').eq(4).simpleShow({effect:'sliding', direction:'top', interval:1000});
+  $('.test:last').simpleShow({effect:'translation', direction:'right', interval:600, opacity: 0.6});
+
 });
 </script>
 </body>

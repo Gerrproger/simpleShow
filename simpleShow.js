@@ -1,6 +1,6 @@
 /*!
  * simpleShow - the responsive cross-browser slideshow plug-in
- * @version  v1.6
+ * @version  v1.7
  * @author   Evgenii Dulikov
  * http://datatables.net/license_gpl2
  * Copyright 2014 Evgenii Dulikov <gerrproger@gmail.com>
@@ -19,7 +19,8 @@ var methods = {
 	  blocks: 10,
       direction: 'bottom',
       normIndex: 10,
-      maxIndex: 100
+      maxIndex: 100,
+      opacity: 1
     }, options);
     jQuery.extend(jQuery.easing,{
     swing: function (x, t, b, c, d){
@@ -127,8 +128,20 @@ var methods = {
                     ttt = !tm ? (dr=='top' ? ('-='+(b+rb)) : ('+='+(b+rb))) : 'auto';
                     elPrev.css({'z-index':set.maxIndex, 'height':h, 'width':w}).
                        animate({'left':lt, 'top':tt}, s*0.3).delay(s*0.1).
-                       animate({'left':ltt, 'top':ttt}, s*0.6, function(){
-                        $(this).css({'z-index':set.normIndex, 'left':0, 'top':0, 'height':'auto', 'width':'auto'}).hide();
+                       animate({'left':ltt, 'top':ttt, opacity:set.opacity}, s*0.6, function(){
+                        $(this).css({'z-index':set.normIndex, 'left':0, 'top':0, 'height':'auto', 'width':'auto', 'opacity':1}).hide();
+                       });
+                    elNnew.show();
+                } break;
+                case 'translation': {
+                    var s = set.speed,
+                    b = (dr=='left' || dr=='right') ? w : h,
+                    tm = (dr=='left' || dr=='right'),
+                    ltt = tm ? (dr=='left' ? ('-='+b) : ('+='+b)) : 'auto',
+                    ttt = !tm ? (dr=='top' ? ('-='+b) : ('+='+b)) : 'auto';
+                    elPrev.css({'z-index':set.maxIndex, 'height':h, 'width':w}).
+                       animate({'left':ltt, 'top':ttt, opacity:set.opacity}, s, function(){
+                        $(this).css({'z-index':set.normIndex, 'left':0, 'top':0, 'height':'auto', 'width':'auto', 'opacity':1}).hide();
                        });
                     elNnew.show();
                 } break;
@@ -156,7 +169,7 @@ var methods = {
                             'height': h, 
                             'left': fl ? (-1*i*ow+'px') : 0 })
                         ).appendTo(self);
-                        block.delay(s*i).animate({top:drTop, left:drLeft, opacity:0.2}, s*2, function(){
+                        block.delay(s*i).animate({top:drTop, left:drLeft, opacity:set.opacity}, s*2, function(){
                                 $(this).remove();
                         });
                     }
