@@ -111,7 +111,7 @@ var params = $('#myslider').simpleShow('params');
 ### effect
 _Default:_ `crossfade`
 
-Transition effects. Can be `blocks`, `sliding`, `fading`, `crossfade`
+Transition effects. Can be `blocks`, `sliding`, `fading`, `crossfade`, `translation`
 ```javascript
 $('#myslider').simpleShow({
   effect: 'fading'
@@ -129,6 +129,17 @@ Amount of blocks which would be used for `blocks` animation.
 $('#myslider').simpleShow({
   effect: 'blocks',
   blocks: 20
+});
+```
+
+### opacity
+_Default:_ `1`
+
+Changes `opacity` to the specified value and adds this effect to your animation. Works only with `blocks`, `sliding`, `translation` effects.
+```javascript
+$('#myslider').simpleShow({
+  effect: 'blocks',
+  opacity: 0.2
 });
 ```
 
