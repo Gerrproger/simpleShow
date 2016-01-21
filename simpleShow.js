@@ -1,9 +1,9 @@
 /*!
  * simpleShow - the responsive cross-browser slideshow plug-in
  * @version  v1.7
- * @author   Evgenii Dulikov
+ * @author   Gerrproger
  * http://datatables.net/license_gpl2
- * Copyright 2014 Evgenii Dulikov <gerrproger@gmail.com>
+ * Copyright 2014 Gerrproger <gerrproger@gmail.com>
  * https://github.com/Gerrproger/simpleShow
  */
  
